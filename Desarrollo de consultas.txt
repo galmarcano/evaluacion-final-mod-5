@@ -1,0 +1,191 @@
+4. Construye las siguientes consultas:
+• Aquellas usadas para insertar, modificar y eliminar un Customer, Staff y Actor.
+• Listar todas las “rental” con los datos del “customer” dado un año y mes.
+• Listar Número, Fecha (payment_date) y Total (amount) de todas las “payment”.
+• Listar todas las “film” del año 2006 que contengan un (rental_rate) mayor a 4.0.
+
+SCRIPT:
+
+• Aquellas usadas para insertar, modificar y eliminar un Customer, Staff y Actor.
+
+	INSERT INTO customer VALUES (600, 2, 'Sebastian', 'Illesca', 'sillesca@sakilacustomer.org', 595, true, '2023-08-28', '2023-08-28 12:30:00.000', 1);
+
+	INSERT INTO city VALUES (601, 'New York', 103, '2023-08-28 13:18:00');
+
+	INSERT INTO address 
+	VALUES (606, '301 BROWN RD FRANKFORT', NULL, 'Frankfort', 601, 10001, 309485691234,'2023-08-28 13:19:00' ),
+	   (607, '300 COUNTY LINE RD ALDEN', NULL, 'Alden', 601, 10001, 983765098162, '2023-08-28 13:19:00');
+
+	INSERT INTO staff VALUES (3, 'Dani', 'Acevedo', 606, 'dacevedo@sakilastaff.com', 1, true, 'Dani', '8cb2237d0679ca88db6464eac60da96345513964', '2023-08-28 13:23:00.00000', NULL);
+
+	INSERT INTO actor VALUES (201, 'Gal', 'Gadot', '2023-08-28 13:24:00.00');
+
+	UPDATE customer
+	SET address_id = 607
+	WHERE customer_id = 600;
+
+	UPDATE staff
+	SET store_id = 2
+	WHERE staff_id = 1;
+
+	UPDATE actor
+	SET first_name = 'Galicia'
+	WHERE actor_id = 201;
+
+	UPDATE customer
+	SET activebool = false, active = 0
+	WHERE customer_id = 591;
+
+	DELETE FROM customer
+	WHERE customer_id = 600;
+
+	DELETE FROM staff
+	WHERE staff_id = 3;
+
+	DELETE FROM actor
+	WHERE actor_id = 201;
+
+• Listar todas las “rental” con los datos del “customer” dado un año y mes.
+
+	SELECT r.rental_id, r.rental_date, c.customer_id, c.first_name, c.last_name, c.email
+	FROM rental r
+	JOIN customer c ON r.customer_id = c.customer_id
+	WHERE EXTRACT(YEAR FROM r.rental_date) = 2005
+  		AND EXTRACT(MONTH FROM r.rental_date) = 05
+	ORDER BY r.rental_id ASC;
+
+• Listar Número, Fecha (payment_date) y Total (amount) de todas las “payment”.
+
+	SELECT p.payment_id, p.payment_date, p.amount
+	FROM payment p;
+
+• Listar todas las “film” del año 2006 que contengan un (rental_rate) mayor a 4.0.
+
+	SELECT f.film_id, f.title, f.release_year, f.rental_rate
+	FROM film f
+	WHERE f.release_year = 2006
+		AND f.rental_rate > 4.00
+	ORDER BY f.rental_rate ASC;
+
+
+
+5. Realiza un Diccionario de datos que contenga el nombre de las tablas y columnas, si éstas pueden ser nulas, y su tipo de dato correspondiente:
+
+
+dvdrental = {
+    "actor": {
+        "actor_id": {"tipo": "integer", "null": False},
+        "first_name": {"tipo": "character varying", "nulo": False},
+        "last_name": {"tipo": "character varying", "nulo": False},
+        "last_update": {"tipo": "timestamp without time zone", "nulo": False}
+    },
+    "address": {
+        "address_id": {"tipo": "integer", "nulo": False},
+        "address": {"tipo": "character varying", "nulo": False},
+        "address2": {"tipo": "character varying", "nulo": True},
+        "district": {"tipo": "character varying", "nulo": False},
+	"city_id": {"tipo": "smallint", "nulo": False},
+	"postal_code": {"tipo": "character varying", "nulo": True},
+	"phone": {"tipo": "character varying", "nulo": False},
+	"last_update": {"tipo": "timestamp without time zone", "nulo": False}
+    },
+    "category": {
+        "category_id": {"tipo": "integer", "nulo": False},
+        "name": {"tipo": "character varying", "nulo": False},
+        "last_update": {"tipo": "timestamp without time zone", "nulo": False}
+    },
+    "city": {
+        "city_id": {"tipo": "integer", "nulo": False},
+        "city": {"tipo": "character varying", "nulo": False},
+        "country_id": {"tipo": "smallint", "nulo": False},
+	"last_update": {"tipo": "timestamp without time zone", "nulo": False}
+    },
+    "country": {
+        "country_id": {"tipo": "integer", "nulo": False},
+        "country": {"tipo": "character varying", "nulo": False},
+	"last_update": {"tipo": "timestamp without time zone", "nulo": False}
+    },
+    "customer": {
+        "customer_id": {"tipo": "integer", "nulo": False},
+        "store_id": {"tipo": "smallint", "nulo": False},
+	"first_name": {"tipo": "character varying", "nulo": False},
+        "last_name": {"tipo": "character varying", "nulo": False},
+	"email": {"tipo": "character varying", "nulo": True},
+        "address_id": {"tipo": "integer", "nulo": False},
+        "activebool": {"tipo": "boolean", "nulo": False},
+	"create_date": {"tipo": "date", "nulo": False},
+	"last_update": {"tipo": "timestamp without time zone", "nulo": True},
+	"active": {"tipo": "integer", "nulo": True}
+    },
+    "film": {
+        "film_id": {"tipo": "integer", "nulo": False},
+        "title": {"tipo": "character varying", "nulo": False},
+	"description": {"tipo": "text", "nulo": True},
+        "release_year": {"tipo": "year", "nulo": True},
+	"language_id": {"tipo": "smallint", "nulo": False},
+        "rental_duration": {"tipo": "smallint", "nulo": False},
+        "rental_rate": {"tipo": "numeric", "nulo": False},
+	"length": {"tipo": "smallint", "nulo": True},
+	"replacement_cost": {"tipo": "smallint", "nulo": False},
+	"rating": {"tipo": "mpaa_rating", "nulo": True},
+	"special_features": {"tipo": "text", "nulo": True},
+	"fulltext": {"tipo": "tsvector", "nulo": False},
+    },
+    "film_actor": {
+        "actor_id": {"tipo": "smallint", "null": False},
+        "film_id": {"tipo": "smallint", "null": False},
+        "last_update": {"tipo": "timestamp without time zone", "nulo": False}
+    },
+    "film_category": {
+        "film_id": {"tipo": "smallint", "null": False},
+        "category_id": {"tipo": "smallint", "null": False},
+        "last_update": {"tipo": "timestamp without time zone", "nulo": False}
+    },
+    "inventory": {
+        "inventory_id": {"tipo": "integer", "null": False},
+        "film_id": {"tipo": "smallint", "null": False},
+	"store_id": {"tipo": "smallint", "null": False},
+        "last_update": {"tipo": "timestamp without time zone", "nulo": False}
+    },
+    "language": {
+        "language_id": {"tipo": "integer", "null": False},
+        "name": {"tipo": "character varying", "nulo": False},
+        "last_update": {"tipo": "timestamp without time zone", "nulo": False}
+    },
+    "payment": {
+        "payment_id": {"tipo": "integer", "null": False},
+        "customer_id": {"tipo": "smallint", "null": False},
+	"staff_id": {"tipo": "smallint", "null": False},
+	"rental_id": {"tipo": "integer", "null": False},
+	"amount": {"tipo": "numeric", "null": False},
+        "payment_date": {"tipo": "timestamp without time zone", "nulo": False}
+    },
+    "rental": {
+    	"rental_id": {"tipo": "integer", "null": False}, 
+	"rental_date": {"tipo": "timestamp without time zone", "nulo": False},  
+ 	"inventory_id": {"tipo": "integer", "null": False},
+        "customer_id": {"tipo": "smallint", "null": False},
+	"return_date": {"tipo": "timestamp without time zone", "nulo": True},
+	"staff_id": {"tipo": "smallint", "null": False},
+	"last_update": {"tipo": "timestamp without time zone", "nulo": False}
+    },
+    "staff": {
+        "staff_id": {"tipo": "integer", "nulo": False},
+	"first_name": {"tipo": "character varying", "nulo": False},
+        "last_name": {"tipo": "character varying", "nulo": False},
+	"address_id": {"tipo": "smallint", "nulo": False},
+	"email": {"tipo": "character varying", "nulo": True},
+        "store_id": {"tipo": "smallint", "nulo": False},
+        "active": {"tipo": "boolean", "nulo": False},
+	"username": {"tipo": "character varying", "nulo": False},
+	"password": {"tipo": "character varying", "nulo": True},
+	"last_update": {"tipo": "timestamp without time zone", "nulo": False},
+	"picture": {"tipo": "bytea", "nulo": True}
+    },
+    "store": {
+        "store_id": {"tipo": "integer", "null": False},
+        "manager_staff_id": {"tipo": "smallint", "null": False},
+	"address_id": {"tipo": "smallint", "null": False},
+        "last_update": {"tipo": "timestamp without time zone", "nulo": False}
+    },
+}
